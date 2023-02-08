@@ -1,53 +1,80 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
+{===============================================================================
+
+  PascalSDK
+
+    A translation of SCS Software's SDK (SCS SDK) for data exchange and
+    communication between a running game and a loaded dynamic library into
+    the Pascal programming language.
+
+  Version 1.0 (2023-02-02)
+
+  Last changed 2023-02-02
+
+  ©2023 František Milt
+
+  Contacts:
+    František Milt: frantisek.milt@gmail.com
+
+  Support:
+    If you find this code useful, please consider supporting its author(s) by
+    making a small donation using the following link(s):
+
+      https://www.paypal.me/FMilt
+
+  Changelog:
+    For detailed changelog and history please refer to this git repository:
+
+      github.com/TheLazyTomcat/PascalSDK
+
+  Dependencies:
+    AuxTypes - github.com/TheLazyTomcat/Lib.AuxTypes
+    StrRect  - github.com/TheLazyTomcat/Lib.StrRect
+
+===============================================================================}
+(*<unit>*)
 (**
  * @file scssdk.h
  *
  * @brief Common SDK types and structures.
  *)
-(*<unit>*) 
 unit scssdk;
-
-interface
 
 {$INCLUDE scssdk_defs.inc}
 
+interface
+
+uses
+  AuxTypes, StrRect;
+
 (*<interface>*)
-// String types used in the API.
+{
+  SDKString
+
+  String type intended to hold strings for/from the API in a pascal-friendly
+  way (that is as managed, reference counted, copy-on-write string).
+}
 type
-{$IF not Declared(TUTF8Char)}
-  TUTF8Char = type AnsiChar;
-{$IFEND}
-{$IF not Declared(PUTF8Char)}
-  PUTF8Char = ^TUTF8Char;
-{$IFEND}
-  
-  TelemetryString = type UTF8String;
+  SDKString = type UTF8String;
 
   // Types used trough the SDK.
-  scs_u8_t  = Byte;               p_scs_u8_t  = ^scs_u8_t;
-  scs_u16_t = Word;               p_scs_u16_t = ^scs_u16_t;
+  scs_u8_t  = UInt8;          p_scs_u8_t  = ^scs_u8_t;
+  scs_u16_t = UInt16;         p_scs_u16_t = ^scs_u16_t;
+  scs_s32_t = Int32;          p_scs_s32_t = ^scs_s32_t;
+  scs_u32_t = UInt32;         p_scs_u32_t = ^scs_u32_t;
+  scs_s64_t = Int64;          p_scs_s64_t = ^scs_s64_t;
+  scs_u64_t = UInt64;         p_scs_u64_t = ^scs_u64_t;
 
-{$IF (SizeOf(LongInt) = 4) and (SizeOf(LongWord) = 4)}
-  scs_s32_t     = LongInt;
-  scs_u32_t     = LongWord;
-{$ELSEIF (SizeOf(Integer) = 4) and (SizeOf(Cardinal) = 4)}
-  scs_s32_t     = Integer;
-  scs_u32_t     = Cardinal;
-{$ELSE}
-  {$MESSAGE FATAL 'Cannot declare 32bit integers'}
-{$IFEND}
-  p_scs_s32_t   = ^scs_s32_t;         p_scs_u32_t     = ^scs_u32_t;
-
-{$IF (defined(DCC) or declared(CompilerVersion)) and not defined(FPC)}
-  {$IF (CompilerVersion <= 18)}
-  // Delphi 2006 and older, D2007 should have UInt64 fully supported
-  UInt64 = Int64;
-  {$IFEND}
-{$IFEND}
-
-  scs_u64_t     = UInt64;             p_scs_u64_t     = ^scs_u64_t;
-  scs_float_t   = Single;             p_scs_float_t   = ^scs_float_t;
-  scs_double_t  = Double;             p_scs_double_t  = ^scs_double_t;
-  scs_string_t  = PUTF8Char;          p_scs_string_t  = ^scs_string_t;
+  scs_float_t  = Float32;     p_scs_float_t  = ^scs_float_t;
+  scs_double_t = Float64;     p_scs_double_t = ^scs_double_t;
+  
+  scs_string_t = PUTF8Char;   p_scs_string_t = ^scs_string_t;
 
 const
   SCS_U32_NIL = scs_u32_t(-1);
@@ -58,18 +85,17 @@ const
  *)
 type
   scs_context_t = Pointer;
+  p_scs_context_t = ^scs_context_t;
 
 (**
  * @brief Timestamp value.
  *
  * Value is expressed in microseconds.
  *)
-type
   scs_timestamp_t = scs_u64_t;
   p_scs_timestamp_t = ^scs_timestamp_t;
 
 // Common return codes.
-type
   scs_result_t = scs_s32_t;
   p_scs_result_t = ^scs_result_t;
 
@@ -77,11 +103,11 @@ const
   SCS_RESULT_ok                 = scs_result_t(0);  // Operation succeeded.
   SCS_RESULT_unsupported        = scs_result_t(-1); // Operation or specified parameters are not supported. (e.g. the plugin does not support the requested version of the API)
   SCS_RESULT_invalid_parameter  = scs_result_t(-2); // Specified parameter is not valid (e.g. null value of callback, invalid combination of flags).
-  SCS_RESULT_already_registered = scs_result_t(-3); // There is already a registered callback for the specified function (e.g. event/channel).
+  SCS_RESULT_already_registered = scs_result_t(-3); // There is already a registered conflicting object (e.g. callback for the specified event/channel, input device with the same name).
   SCS_RESULT_not_found          = scs_result_t(-4); // Specified item (e.g. channel) was not found.
   SCS_RESULT_unsupported_type   = scs_result_t(-5); // Specified value type is not supported (e.g. channel does not provide that value type).
   SCS_RESULT_not_now            = scs_result_t(-6); // Action (event/callback registration) is not allowed in the current state. Indicates incorrect use of the api.
-  SCS_RESULT_generic_error      = scs_result_t(-7); // Error not convered by other existing code.
+  SCS_RESULT_generic_error      = scs_result_t(-7); // Error not covered by other existing code.
 
 // Types of messages printed to log.
 type
@@ -89,9 +115,9 @@ type
   p_scs_log_type_t = ^scs_log_type_t;
 
 const
-  SCS_LOG_TYPE_message  = scs_log_type_t(0);
-  SCS_LOG_TYPE_warning  = scs_log_type_t(1);
-  SCS_LOG_TYPE_error    = scs_log_type_t(2);
+  SCS_LOG_TYPE_message = scs_log_type_t(0);
+  SCS_LOG_TYPE_warning = scs_log_type_t(1);
+  SCS_LOG_TYPE_error   = scs_log_type_t(2);
 
 (**
  * @brief Logs specified message to the game log.
@@ -100,7 +126,7 @@ const
  * @param message Message to log.
  *)
 type
-  scs_log_t = procedure(const aType: scs_log_type_t; const aMessage: scs_string_t); stdcall;
+  scs_log_t = procedure(_type: scs_log_type_t; _message: scs_string_t); {$IFDEF Windows}stdcall{$ELSE}cdecl{$ENDIF};
 
 // Common initialization structures.
 
@@ -108,8 +134,7 @@ type
  * @brief Initialization parameters common to most APIs provided
  * by the SDK.
  *)
-type
-  scs_sdk_init_params_v100_t = Record
+  scs_sdk_init_params_v100_t = record
     (**
      * @brief Name of the game for display purposes.
      *
@@ -120,6 +145,7 @@ type
      * This pointer will be never NULL.
      *)
     game_name:    scs_string_t;
+
     (**
      * @brief Identification of the game.
      *
@@ -135,6 +161,7 @@ type
      * This pointer will be never NULL.
      *)
     game_id:      scs_string_t;
+
     (**
      * @brief Version of the game for purpose of the specific api
      * which is being initialized.
@@ -142,12 +169,14 @@ type
      * Does NOT match the patch level of the game.
      *)
     game_version: scs_u32_t;
-{$IFDEF SCS_ARCHITECTURE_x64}
+
+  {$IFDEF SCS_ARCHITECTURE_x64}
     (**
      * @brief Explicit alignment for the 64 bit pointer.
      *)
     _padding:     scs_u32_t;
-{$ENDIF}
+  {$ENDIF}
+  
     (**
      * @brief Function used to write messages to the game log.
      *
@@ -159,45 +188,161 @@ type
   end;
   p_scs_sdk_init_params_v100_t = ^scs_sdk_init_params_v100_t;
 
-// Routines for API strings conversions. 
-Function APIStringToTelemetryString(const Str: scs_string_t): TelemetryString;
-Function TelemetryStringToAPIString(const Str: TelemetryString): scs_string_t;
-procedure APIStringFree(var Str: scs_string_t);
-Function TelemetryStringDecode(const Str: TelemetryString): String;{$IFDEF CanInline} inline;{$ENDIF}
-Function TelemetryStringEncode(const Str: String): TelemetryString;{$IFDEF CanInline} inline;{$ENDIF}
-Function APIString(const Str: TelemetryString): scs_string_t; overload;{$IFDEF CanInline} inline;{$ENDIF}
-
 // Routines replacing some of the C macros functionality.
-Function SCSCheckSize(ActualSize,Expected32,Expected64: Cardinal): Boolean;{$IFDEF CanInline} inline;{$ENDIF}
+Function scs_check_size(actual,expected_32,expected_64: TMemSize): Boolean;{$IFDEF CanInline} inline;{$ENDIF}
 
-Function SCSMakeVersion(Major, Minor: scs_u16_t): scs_u32_t;{$IFDEF CanInline} inline;{$ENDIF}
-Function SCSGetMajorVersion(Version: scs_u32_t): scs_u16_t;{$IFDEF CanInline} inline;{$ENDIF}
-Function SCSGetMinorVersion(Version: scs_u32_t): scs_u16_t;{$IFDEF CanInline} inline;{$ENDIF}
-Function SCSGetVersionAsString(Version: scs_u32_t): String;
+Function SCS_MAKE_VERSION(major, minor: scs_u16_t): scs_u32_t;{$IFDEF CanInline} inline;{$ENDIF}
+Function SCS_GET_MAJOR_VERSION(version: scs_u32_t): scs_u16_t;{$IFDEF CanInline} inline;{$ENDIF}
+Function SCS_GET_MINOR_VERSION(version: scs_u32_t): scs_u16_t;{$IFDEF CanInline} inline;{$ENDIF}
+Function SCS_VERSION_AS_STRING(version: scs_u32_t): String;
+
+//------------------------------------------------------------------------------
+// Routines for API strings conversions.
+
+{
+  APIString
+
+  Since scs_string_t is just a pointer, APIString does only casting to pointer
+  and then returns it. No new memory is allocated (do NOT attempt to free the
+  returned pointer).
+
+  Use this function to pass static strings to the API.
+}
+Function APIString(const Str: SDKString): scs_string_t; overload;{$IFDEF CanInline} inline;{$ENDIF}
+
+{
+  APIStringToSDKString
+
+  Creates new variable of type SDKString, fills it with content of Str and then
+  returns it.
+  If the Str parameter is not assigned or is empty, then it will return an
+  empty string.
+
+  Use this function if you want to store strings returned from the API for
+  later use.
+}
+Function APIStringToSDKString(const Str: scs_string_t): SDKString;
+
+{
+  SDKStringToAPIString
+
+  Allocates new memory, fills it with content of Str and then returns pointer
+  to it.
+
+    WARNING - allocated memory must be explicitly freed using APIStringFree.
+
+  If the Str is an empty string, then this function will return a nil (null)
+  pointer.
+
+  Use of this function is limited at this moment, it is here for the sake of
+  completeness and a possible future use.
+}
+Function SDKStringToAPIString(const Str: SDKString): scs_string_t;
+
+{
+  SDKStringToAPIString
+
+  Frees memory allocated by SDKStringToAPIString and sets the pointer to nil.
+}
+procedure APIStringFree(var Str: scs_string_t);
+
+{
+  SDKStringDecode
+
+  Converts SDKString type to default string type.
+
+  As default strings can be widly different depending on compiler, its version,
+  used component library and other things, never do direct assignment between
+  SDKString type and String type, always do the conversion.
+}
+Function SDKStringDecode(const Str: SDKString): String;{$IFDEF CanInline} inline;{$ENDIF}
+
+{
+  SDKStringEncode
+
+  Converts default string type to SDKString type.
+}
+Function SDKStringEncode(const Str: String): SDKString;{$IFDEF CanInline} inline;{$ENDIF}
+
 (*</interface>*)
 
 implementation
 
 uses
-  SysUtils;
+  SysUtils
+{$IF not Defined(FPC) and (CompilerVersion >= 20)}(* Delphi2009+ *)
+  , AnsiStrings
+{$IFEND};
   
-(*<implementation>*)    
-Function APIStringToTelemetryString(const Str: scs_string_t): TelemetryString;
+(*<implementation>*)
+
+{$IFDEF FPC}{$PUSH}{$WARN 5024 OFF}{$ENDIF} // supress warnings about unused parameters
+Function scs_check_size(actual,expected_32,expected_64: TMemSize): Boolean;
+begin
+{$IF Defined(SCS_ARCHITECTURE_x64)}
+  Result := actual = expected_64;
+{$ELSEIF Defined(SCS_ARCHITECTURE_x86)}
+  Result := actual = expected_32;
+{$ELSE}
+  {$MESSAGE FATAL 'Undefined architecture!'}  //better prevent compilation
+  Halt; //architecture is not known, initiate immediate abnormal termination
+{$IFEND}
+end;
+{$IFDEF FPC}{$POP}{$ENDIF}  // restore warning settings
+
+//------------------------------------------------------------------------------
+
+Function SCS_MAKE_VERSION(major, minor: scs_u16_t): scs_u32_t;
+begin
+Result := (major shl 16) or minor;
+end;
+
+//------------------------------------------------------------------------------
+
+Function SCS_GET_MAJOR_VERSION(version: scs_u32_t): scs_u16_t;
+begin
+Result := (version shr 16) and $FFFF;
+end;
+
+//------------------------------------------------------------------------------
+
+Function SCS_GET_MINOR_VERSION(version: scs_u32_t): scs_u16_t;
+begin
+Result := version and $FFFF;
+end;
+
+//------------------------------------------------------------------------------
+
+Function SCS_VERSION_AS_STRING(version: scs_u32_t): String;
+begin
+Result := Format('%d.%d',[SCS_GET_MAJOR_VERSION(version),SCS_GET_MINOR_VERSION(version)]);
+end;
+
+//==============================================================================
+
+Function APIString(const Str: SDKString): scs_string_t;
+begin
+Result := scs_string_t(PUTF8Char(Str));
+end;
+
+//------------------------------------------------------------------------------
+
+Function APIStringToSDKString(const Str: scs_string_t): SDKString;
 begin
 If Assigned(Str) then
   begin
-    SetLength(Result,StrLen(PAnsiChar(Str)));
-    Move(Str^,PUTF8Char(Result)^,Length(Result) * SizeOf(TUTF8Char));
+    SetLength(Result,{$IF Declared(AnsiStrings)}AnsiStrings.{$IFEND}StrLen(PAnsiChar(Str)));
+    Move(Str^,PUTF8Char(Result)^,Length(Result) * SizeOf(UTF8Char));
   end
 else Result := '';
 end;
 
 //------------------------------------------------------------------------------
 
-Function TelemetryStringToAPIString(const Str: TelemetryString): scs_string_t;
+Function SDKStringToAPIString(const Str: SDKString): scs_string_t;
 begin
 If Length(Str) > 0 then
-  Result := scs_string_t(StrNew(PAnsiChar(Str)))
+  Result := scs_string_t({$IF Declared(AnsiStrings)}AnsiStrings.{$IFEND}StrNew(PAnsiChar(Str)))
 else
   Result := nil;
 end;
@@ -208,102 +353,35 @@ procedure APIStringFree(var Str: scs_string_t);
 begin
 If Assigned(Str) then
   begin
-    StrDispose(PAnsiChar(Str));
+    {$IF Declared(AnsiStrings)}AnsiStrings.{$IFEND}StrDispose(PAnsiChar(Str));
     Str := nil;
   end;
 end;
 
 //------------------------------------------------------------------------------
 
-Function TelemetryStringDecode(const Str: TelemetryString): String;
+Function SDKStringDecode(const Str: SDKString): String;
 begin
-{$IFDEF Unicode}
-Result := UTF8Decode(Str);
-{$ELSE}
-{$IFDEF FPC}
-Result := Str;
-{$ELSE}
-Result := UTF8ToAnsi(Str);
-{$ENDIF}
-{$ENDIF}
+Result := StrRect.UTF8ToStr(Str);
 end;
 
 //------------------------------------------------------------------------------
 
-Function TelemetryStringEncode(const Str: String): TelemetryString;
+Function SDKStringEncode(const Str: String): SDKString;
 begin
-{$IFDEF Unicode}
-Result := UTF8Encode(Str);
-{$ELSE}
-{$IFDEF FPC}
-Result := Str;
-{$ELSE}
-Result := AnsiToUTF8(Str);
-{$ENDIF}
-{$ENDIF}
+Result := StrRect.StrToUTF8(Str);
 end;
 
-//------------------------------------------------------------------------------
-
-Function APIString(const Str: TelemetryString): scs_string_t;
-begin
-Result := scs_string_t(PAnsiChar(Str));
-end;
-
-//------------------------------------------------------------------------------
-
-{$IFDEF FPC}{$PUSH}{$WARN 5024 OFF}{$ENDIF} // supress warnings about unused parameters
-Function SCSCheckSize(ActualSize, Expected32, Expected64: Cardinal): Boolean;
-begin
-{$IFDEF SCS_ARCHITECTURE_x64}
-  Result := ActualSize = Expected64;
-{$ELSE}
-  {$IFDEF SCS_ARCHITECTURE_x86}
-  Result := ActualSize = Expected32;
-  {$ELSE}
-  {$MESSAGE FATAL 'Undefined architecture!'}  //better prevent compilation
-  Halt; //architecture is not known, initiate immediate abnormal termination
-  {$ENDIF}
-{$ENDIF}
-end;
-{$IFDEF FPC}{$POP}{$ENDIF}
-
-//------------------------------------------------------------------------------
-
-Function SCSMakeVersion(Major, Minor: scs_u16_t): scs_u32_t;
-begin
-Result := (Major shl 16) or Minor;
-end;
-
-//------------------------------------------------------------------------------
-
-Function SCSGetMajorVersion(Version: scs_u32_t): scs_u16_t;
-begin
-Result := (Version shr 16) and $FFFF;
-end;
-
-//------------------------------------------------------------------------------
-
-Function SCSGetMinorVersion(Version: scs_u32_t): scs_u16_t;
-begin
-Result := Version and $FFFF;
-end;
-
-//------------------------------------------------------------------------------
-
-Function SCSGetVersionAsString(Version: scs_u32_t): String;
-begin
-Result := IntToStr(SCSGetMajorVersion(Version)) + '.' + 
-          IntToStr(SCSGetMinorVersion(Version));
-end;
 (*</implementation>*)
+
+//==============================================================================
 
 {$IFDEF AssertTypeSize}
 initialization
 (*<initialization>*)
-  Assert(SCSCheckSize(SizeOf(scs_sdk_init_params_v100_t),16,32));
+  Assert(scs_check_size(SizeOf(scs_sdk_init_params_v100_t),16,32));
 (*</initialization>*)
 {$ENDIF}
 
-(*</unit>*) 
+(*</unit>*)
 end.

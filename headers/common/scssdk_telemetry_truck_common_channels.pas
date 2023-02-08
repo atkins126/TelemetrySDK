@@ -1,3 +1,44 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
+{===============================================================================
+
+  PascalSDK
+
+    A translation of SCS Software's SDK (SCS SDK) for data exchange and
+    communication between a running game and a loaded dynamic library into
+    the Pascal programming language.
+
+  Version 1.0 (2023-02-02)
+
+  Last changed 2023-02-02
+
+  ©2023 František Milt
+
+  Contacts:
+    František Milt: frantisek.milt@gmail.com
+
+  Support:
+    If you find this code useful, please consider supporting its author(s) by
+    making a small donation using the following link(s):
+
+      https://www.paypal.me/FMilt
+
+  Changelog:
+    For detailed changelog and history please refer to this git repository:
+
+      github.com/TheLazyTomcat/PascalSDK
+
+  Dependencies:
+    AuxTypes - github.com/TheLazyTomcat/Lib.AuxTypes
+    StrRect  - github.com/TheLazyTomcat/Lib.StrRect
+
+===============================================================================}
+(*<unit>*)
 (**
  * @file scssdk_telemetry_truck_common_channels.h
  *
@@ -21,26 +62,26 @@
  *     dvector/fvector type containing just the positional part.
  * @li Indexed entries are using zero-based indices.
  *)
-(*<unit>*)  
 unit scssdk_telemetry_truck_common_channels;
+
+{$INCLUDE '..\scssdk_defs.inc'}
 
 interface
 
-{$INCLUDE ..\scssdk_defs.inc}
-
 uses
   scssdk;
-
+  
 (*<interface>*)
+
 // Movement.
 
-const
 (**
  * @brief Represents world space position and orientation of the truck.
  *
  * Type: dplacement
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_world_placement             = TelemetryString('truck.world.placement');
+const
+  SCS_TELEMETRY_TRUCK_CHANNEL_world_placement = SDKString('truck.world.placement');
 
 (**
  * @brief Represents vehicle space linear velocity of the truck measured
@@ -48,7 +89,7 @@ const
  *
  * Type: fvector
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_local_linear_velocity       = TelemetryString('truck.local.velocity.linear');
+  SCS_TELEMETRY_TRUCK_CHANNEL_local_linear_velocity = SDKString('truck.local.velocity.linear');
 
 (**
  * @brief Represents vehicle space angular velocity of the truck measured
@@ -56,7 +97,7 @@ const
  *
  * Type: fvector
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_local_angular_velocity      = TelemetryString('truck.local.velocity.angular');
+  SCS_TELEMETRY_TRUCK_CHANNEL_local_angular_velocity = SDKString('truck.local.velocity.angular');
 
 (**
  * @brief Represents vehicle space linear acceleration of the truck measured
@@ -64,15 +105,15 @@ const
  *
  * Type: fvector
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_local_linear_acceleration   = TelemetryString('truck.local.acceleration.linear');
+  SCS_TELEMETRY_TRUCK_CHANNEL_local_linear_acceleration = SDKString('truck.local.acceleration.linear');
 
-(**
+ (**
  * @brief Represents vehicle space angular acceleration of the truck meassured
  * in rotations per second^2
  *
  * Type: fvector
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_local_angular_acceleration  = TelemetryString('truck.local.acceleration.angular');
+  SCS_TELEMETRY_TRUCK_CHANNEL_local_angular_acceleration = SDKString('truck.local.acceleration.angular');
 
 (**
  * @brief Represents a vehicle space position and orientation delta
@@ -80,7 +121,7 @@ const
  *
  * Type: fplacement
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_cabin_offset                = TelemetryString('truck.cabin.offset');
+  SCS_TELEMETRY_TRUCK_CHANNEL_cabin_offset = SDKString('truck.cabin.offset');
 
 (**
  * @brief Represents cabin space angular velocity of the cabin measured
@@ -88,7 +129,7 @@ const
  *
  * Type: fvector
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_cabin_angular_velocity      = TelemetryString('truck.cabin.velocity.angular');
+  SCS_TELEMETRY_TRUCK_CHANNEL_cabin_angular_velocity = SDKString('truck.cabin.velocity.angular');
 
  (**
  * @brief Represents cabin space angular acceleration of the cabin
@@ -96,7 +137,7 @@ const
  *
  * Type: fvector
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_cabin_angular_acceleration  = TelemetryString('truck.cabin.acceleration.angular');
+  SCS_TELEMETRY_TRUCK_CHANNEL_cabin_angular_acceleration = SDKString('truck.cabin.acceleration.angular');
 
 (**
  * @brief Represents a cabin space position and orientation delta
@@ -107,7 +148,7 @@ const
  *
  * Type: fplacement
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_head_offset                 = TelemetryString('truck.head.offset');
+  SCS_TELEMETRY_TRUCK_CHANNEL_head_offset = SDKString('truck.head.offset');
 
 (**
  * @brief Speedometer speed in meters per second.
@@ -116,7 +157,7 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_speed                       = TelemetryString('truck.speed');
+  SCS_TELEMETRY_TRUCK_CHANNEL_speed = SDKString('truck.speed');
 
 // Powertrain related
 
@@ -125,7 +166,7 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_engine_rpm                  = TelemetryString('truck.engine.rpm');
+  SCS_TELEMETRY_TRUCK_CHANNEL_engine_rpm = SDKString('truck.engine.rpm');
 
 (**
  * @brief Gear currently selected in the engine.
@@ -136,7 +177,7 @@ const
  *
  * Type: s32
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_engine_gear                 = TelemetryString('truck.engine.gear');
+  SCS_TELEMETRY_TRUCK_CHANNEL_engine_gear = SDKString('truck.engine.gear');
 
 (**
  * @brief Gear currently displayed on dashboard.
@@ -147,7 +188,7 @@ const
  *
  * Type: s32
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_displayed_gear              = TelemetryString('truck.displayed.gear');
+  SCS_TELEMETRY_TRUCK_CHANNEL_displayed_gear = SDKString('truck.displayed.gear');
 
 // Driving
 
@@ -161,7 +202,7 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_input_steering              = TelemetryString('truck.input.steering');
+  SCS_TELEMETRY_TRUCK_CHANNEL_input_steering = SDKString('truck.input.steering');
 
 (**
  * @brief Throttle received from input <0;1>
@@ -171,7 +212,7 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_input_throttle              = TelemetryString('truck.input.throttle');
+  SCS_TELEMETRY_TRUCK_CHANNEL_input_throttle = SDKString('truck.input.throttle');
 
 (**
  * @brief Brake received from input <0;1>
@@ -181,7 +222,7 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_input_brake                 = TelemetryString('truck.input.brake');
+  SCS_TELEMETRY_TRUCK_CHANNEL_input_brake = SDKString('truck.input.brake');
 
 (**
  * @brief Clutch received from input <0;1>
@@ -191,7 +232,7 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_input_clutch                = TelemetryString('truck.input.clutch');
+  SCS_TELEMETRY_TRUCK_CHANNEL_input_clutch = SDKString('truck.input.clutch');
 
 (**
  * @brief Steering as used by the simulation <-1;1>
@@ -203,7 +244,7 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_effective_steering          = TelemetryString('truck.effective.steering');
+  SCS_TELEMETRY_TRUCK_CHANNEL_effective_steering = SDKString('truck.effective.steering');
 
 (**
  * @brief Throttle pedal input as used by the simulation <0;1>
@@ -213,17 +254,17 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_effective_throttle          = TelemetryString('truck.effective.throttle');
+  SCS_TELEMETRY_TRUCK_CHANNEL_effective_throttle = SDKString('truck.effective.throttle');
 
 (**
  * @brief Brake pedal input as used by the simulation <0;1>
  *
  * Accounts for the press attack curve for digital inputs. Does
- * not contain retarder, parking or motor brake.
+ * not contain retarder, parking or engine brake.
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_effective_brake             = TelemetryString('truck.effective.brake');
+  SCS_TELEMETRY_TRUCK_CHANNEL_effective_brake = SDKString('truck.effective.brake');
 
 (**
  * @brief Clutch pedal input as used by the simulation <0;1>
@@ -233,7 +274,7 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_effective_clutch            = TelemetryString('truck.effective.clutch');
+  SCS_TELEMETRY_TRUCK_CHANNEL_effective_clutch = SDKString('truck.effective.clutch');
 
 (**
  * @brief Speed selected for the cruise control in m/s
@@ -242,7 +283,7 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_cruise_control              = TelemetryString('truck.cruise_control');
+  SCS_TELEMETRY_TRUCK_CHANNEL_cruise_control = SDKString('truck.cruise_control');
 
 // Gearbox related
 
@@ -253,7 +294,7 @@ const
  *
  * Type: u32
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_hshifter_slot               = TelemetryString('truck.hshifter.slot');
+  SCS_TELEMETRY_TRUCK_CHANNEL_hshifter_slot = SDKString('truck.hshifter.slot');
 
 (**
  * @brief Enabled state of range/splitter selector toggles.
@@ -263,7 +304,7 @@ const
  *
  * Type: indexed bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_hshifter_selector           = TelemetryString('truck.hshifter.select');
+  SCS_TELEMETRY_TRUCK_CHANNEL_hshifter_selector = SDKString('truck.hshifter.select');
 
  // Brakes.
 
@@ -272,45 +313,45 @@ const
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_parking_brake               = TelemetryString('truck.brake.parking');
+  SCS_TELEMETRY_TRUCK_CHANNEL_parking_brake = SDKString('truck.brake.parking');
 
 (**
- * @brief Is the motor brake enabled?
+ * @brief Is the engine brake enabled?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_motor_brake                 = TelemetryString('truck.brake.motor');
+  SCS_TELEMETRY_TRUCK_CHANNEL_motor_brake = SDKString('truck.brake.motor');
 
 (**
  * @brief Current level of the retarder.
  *
- * <0;max> where 0 is disabled retarder and max is maximal
+ * <0;max> where 0 is disabled retarder and max is maximum
  * value found in TRUCK configuration.
  *
  * Type: u32
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_retarder_level              = TelemetryString('truck.brake.retarder');
+  SCS_TELEMETRY_TRUCK_CHANNEL_retarder_level = SDKString('truck.brake.retarder');
 
 (**
  * @brief Pressure in the brake air tank in psi
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_brake_air_pressure          = TelemetryString('truck.brake.air.pressure');
+  SCS_TELEMETRY_TRUCK_CHANNEL_brake_air_pressure = SDKString('truck.brake.air.pressure');
 
 (**
  * @brief Is the air pressure warning active?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_brake_air_pressure_warning  = TelemetryString('truck.brake.air.pressure.warning');
+  SCS_TELEMETRY_TRUCK_CHANNEL_brake_air_pressure_warning = SDKString('truck.brake.air.pressure.warning');
 
 (**
  * @brief Are the emergency brakes active as result of low air pressure?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_brake_air_pressure_emergency = TelemetryString('truck.brake.air.pressure.emergency');
+  SCS_TELEMETRY_TRUCK_CHANNEL_brake_air_pressure_emergency = SDKString('truck.brake.air.pressure.emergency');
 
 (**
  * @brief Temperature of the brakes in degrees celsius.
@@ -319,58 +360,58 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_brake_temperature           = TelemetryString('truck.brake.temperature');
+  SCS_TELEMETRY_TRUCK_CHANNEL_brake_temperature = SDKString('truck.brake.temperature');
 
-// Various = TelemetryString('consumables'
+// Various "consumables"
 
 (**
  * @brief Amount of fuel in liters
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_fuel                        = TelemetryString('truck.fuel.amount');
+  SCS_TELEMETRY_TRUCK_CHANNEL_fuel = SDKString('truck.fuel.amount');
 
 (**
  * @brief Is the low fuel warning active?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_fuel_warning                = TelemetryString('truck.fuel.warning');
+  SCS_TELEMETRY_TRUCK_CHANNEL_fuel_warning = SDKString('truck.fuel.warning');
 
 (**
  * @brief Average consumption of the fuel in liters/km
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_fuel_average_consumption    = TelemetryString('truck.fuel.consumption.average');
+  SCS_TELEMETRY_TRUCK_CHANNEL_fuel_average_consumption = SDKString('truck.fuel.consumption.average');
 
 (**
  * @brief Estimated range of truck with current amount of fuel in km
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_fuel_range                  = TelemetryString('truck.fuel.range');
+  SCS_TELEMETRY_TRUCK_CHANNEL_fuel_range = SDKString('truck.fuel.range');
 
 (**
  * @brief Amount of AdBlue in liters
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_adblue                      = TelemetryString('truck.adblue');
+  SCS_TELEMETRY_TRUCK_CHANNEL_adblue = SDKString('truck.adblue');
 
 (**
  * @brief Is the low adblue warning active?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_adblue_warning              = TelemetryString('truck.adblue.warning');
+  SCS_TELEMETRY_TRUCK_CHANNEL_adblue_warning = SDKString('truck.adblue.warning');
 
 (**
  * @brief Average consumption of the adblue in liters/km
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_adblue_average_consumption  = TelemetryString('truck.adblue.consumption.average');
+  SCS_TELEMETRY_TRUCK_CHANNEL_adblue_average_consumption = SDKString('truck.adblue.consumption.average');
 
 // Oil
 
@@ -379,21 +420,21 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_oil_pressure                = TelemetryString('truck.oil.pressure');
+  SCS_TELEMETRY_TRUCK_CHANNEL_oil_pressure = SDKString('truck.oil.pressure');
 
 (**
  * @brief Is the oil pressure warning active?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_oil_pressure_warning        = TelemetryString('truck.oil.pressure.warning');
+  SCS_TELEMETRY_TRUCK_CHANNEL_oil_pressure_warning = SDKString('truck.oil.pressure.warning');
 
 (**
  * @brief Temperature of the oil in degrees celsius.
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_oil_temperature             = TelemetryString('truck.oil.temperature');
+  SCS_TELEMETRY_TRUCK_CHANNEL_oil_temperature = SDKString('truck.oil.temperature');
 
 // Temperature in various systems.
 
@@ -402,14 +443,14 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_water_temperature           = TelemetryString('truck.water.temperature');
+  SCS_TELEMETRY_TRUCK_CHANNEL_water_temperature = SDKString('truck.water.temperature');
 
 (**
  * @brief Is the water temperature warning active?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_water_temperature_warning   = TelemetryString('truck.water.temperature.warning');
+  SCS_TELEMETRY_TRUCK_CHANNEL_water_temperature_warning = SDKString('truck.water.temperature.warning');
 
 // Battery
 
@@ -418,14 +459,14 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_battery_voltage             = TelemetryString('truck.battery.voltage');
+  SCS_TELEMETRY_TRUCK_CHANNEL_battery_voltage = SDKString('truck.battery.voltage');
 
 (**
  * @brief Is the battery voltage/not charging warning active?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_battery_voltage_warning     = TelemetryString('truck.battery.voltage.warning');
+  SCS_TELEMETRY_TRUCK_CHANNEL_battery_voltage_warning = SDKString('truck.battery.voltage.warning');
 
 // Enabled state of various elements.
 
@@ -434,14 +475,14 @@ const
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_electric_enabled            = TelemetryString('truck.electric.enabled');
+  SCS_TELEMETRY_TRUCK_CHANNEL_electric_enabled = SDKString('truck.electric.enabled');
 
 (**
  * @brief Is the engine enabled?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_engine_enabled              = TelemetryString('truck.engine.enabled');
+  SCS_TELEMETRY_TRUCK_CHANNEL_engine_enabled = SDKString('truck.engine.enabled');
 
 (**
  * @brief Is the left blinker enabled?
@@ -453,7 +494,7 @@ const
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_lblinker                    = TelemetryString('truck.lblinker');
+  SCS_TELEMETRY_TRUCK_CHANNEL_lblinker = SDKString('truck.lblinker');
 
 (**
  * @brief Is the right blinker enabled?
@@ -465,42 +506,53 @@ const
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_rblinker                    = TelemetryString('truck.rblinker');
+  SCS_TELEMETRY_TRUCK_CHANNEL_rblinker = SDKString('truck.rblinker');
+
+(**
+ * @brief Are the hazard warning light enabled?
+ *
+ * This represents the logical enable state of the hazard warning.
+ * It it is true as long it is enabled regardless of the physical
+ * enabled state of the light (i.e. it does not blink).
+ *
+ * Type: bool
+ *)
+  SCS_TELEMETRY_TRUCK_CHANNEL_hazard_warning = SDKString('truck.hazard.warning');
 
 (**
  * @brief Is the light in the left blinker currently on?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_light_lblinker              = TelemetryString('truck.light.lblinker');
+  SCS_TELEMETRY_TRUCK_CHANNEL_light_lblinker = SDKString('truck.light.lblinker');
 
 (**
  * @brief Is the light in the right blinker currently on?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_light_rblinker              = TelemetryString('truck.light.rblinker');
+  SCS_TELEMETRY_TRUCK_CHANNEL_light_rblinker = SDKString('truck.light.rblinker');
 
 (**
  * @brief Are the parking lights enabled?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_light_parking               = TelemetryString('truck.light.parking');
+  SCS_TELEMETRY_TRUCK_CHANNEL_light_parking = SDKString('truck.light.parking');
 
 (**
  * @brief Are the low beam lights enabled?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_light_low_beam              = TelemetryString('truck.light.beam.low');
+  SCS_TELEMETRY_TRUCK_CHANNEL_light_low_beam = SDKString('truck.light.beam.low');
 
 (**
  * @brief Are the high beam lights enabled?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_light_high_beam             = TelemetryString('truck.light.beam.high');
+  SCS_TELEMETRY_TRUCK_CHANNEL_light_high_beam = SDKString('truck.light.beam.high');
 
 (**
  * @brief Are the auxiliary front lights active?
@@ -511,7 +563,7 @@ const
  *
  * Type: u32
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_light_aux_front             = TelemetryString('truck.light.aux.front');
+  SCS_TELEMETRY_TRUCK_CHANNEL_light_aux_front = SDKString('truck.light.aux.front');
 
 (**
  * @brief Are the auxiliary roof lights active?
@@ -522,42 +574,77 @@ const
  *
  * Type: u32
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_light_aux_roof              = TelemetryString('truck.light.aux.roof');
+  SCS_TELEMETRY_TRUCK_CHANNEL_light_aux_roof = SDKString('truck.light.aux.roof');
 
 (**
  * @brief Are the beacon lights enabled?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_light_beacon                = TelemetryString('truck.light.beacon');
+  SCS_TELEMETRY_TRUCK_CHANNEL_light_beacon = SDKString('truck.light.beacon');
 
 (**
  * @brief Is the brake light active?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_light_brake                 = TelemetryString('truck.light.brake');
+  SCS_TELEMETRY_TRUCK_CHANNEL_light_brake = SDKString('truck.light.brake');
 
 (**
  * @brief Is the reverse light active?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_light_reverse               = TelemetryString('truck.light.reverse');
+  SCS_TELEMETRY_TRUCK_CHANNEL_light_reverse = SDKString('truck.light.reverse');
 
 (**
  * @brief Are the wipers enabled?
  *
  * Type: bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_wipers                      = TelemetryString('truck.wipers');
+  SCS_TELEMETRY_TRUCK_CHANNEL_wipers = SDKString('truck.wipers');
 
 (**
  * @brief Intensity of the dashboard backlight as factor <0;1>
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_dashboard_backlight         = TelemetryString('truck.dashboard.backlight');
+  SCS_TELEMETRY_TRUCK_CHANNEL_dashboard_backlight = SDKString('truck.dashboard.backlight');
+
+(**
+ * @brief Is the differential lock enabled?
+ *
+ * Type: bool
+ *)
+  SCS_TELEMETRY_TRUCK_CHANNEL_differential_lock = SDKString('truck.differential_lock');
+
+(**
+ * @brief Is the lift axle control set to lifted state?
+ *
+ * Type: bool
+ *)
+  SCS_TELEMETRY_TRUCK_CHANNEL_lift_axle = SDKString('truck.lift_axle');
+
+(**
+ * @brief Is the lift axle indicator lit?
+ *
+ * Type: bool
+ *)
+  SCS_TELEMETRY_TRUCK_CHANNEL_lift_axle_indicator = SDKString('truck.lift_axle.indicator');
+
+(**
+ * @brief Is the trailer lift axle control set to lifted state?
+ *
+ * Type: bool
+ *)
+  SCS_TELEMETRY_TRUCK_CHANNEL_trailer_lift_axle = SDKString('truck.trailer.lift_axle');
+
+(**
+ * @brief Is the trailer lift axle indicator lit?
+ *
+ * Type: bool
+ *)
+  SCS_TELEMETRY_TRUCK_CHANNEL_trailer_lift_axle_indicator = SDKString('truck.trailer.lift_axle.indicator');
 
 // Wear info.
 
@@ -566,42 +653,42 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_wear_engine                 = TelemetryString('truck.wear.engine');
+  SCS_TELEMETRY_TRUCK_CHANNEL_wear_engine = SDKString('truck.wear.engine');
 
 (**
  * @brief Wear of the transmission accessory as <0;1>
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_wear_transmission           = TelemetryString('truck.wear.transmission');
+  SCS_TELEMETRY_TRUCK_CHANNEL_wear_transmission = SDKString('truck.wear.transmission');
 
 (**
  * @brief Wear of the cabin accessory as <0;1>
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_wear_cabin                  = TelemetryString('truck.wear.cabin');
+  SCS_TELEMETRY_TRUCK_CHANNEL_wear_cabin = SDKString('truck.wear.cabin');
 
 (**
  * @brief Wear of the chassis accessory as <0;1>
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_wear_chassis                = TelemetryString('truck.wear.chassis');
+  SCS_TELEMETRY_TRUCK_CHANNEL_wear_chassis = SDKString('truck.wear.chassis');
 
 (**
  * @brief Average wear across the wheel accessories as <0;1>
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_wear_wheels                 = TelemetryString('truck.wear.wheels');
+  SCS_TELEMETRY_TRUCK_CHANNEL_wear_wheels = SDKString('truck.wear.wheels');
 
 (**
  * @brief The value of the odometer in km.
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_odometer                    = TelemetryString('truck.odometer');
+  SCS_TELEMETRY_TRUCK_CHANNEL_odometer = SDKString('truck.odometer');
 
 (**
  * @brief The value of truck's navigation distance (in meters).
@@ -610,7 +697,7 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_navigation_distance         = TelemetryString('truck.navigation.distance');
+  SCS_TELEMETRY_TRUCK_CHANNEL_navigation_distance = SDKString('truck.navigation.distance');
 
 (**
  * @brief The value of truck's navigation eta (in second).
@@ -619,7 +706,7 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_navigation_time             = TelemetryString('truck.navigation.time');
+  SCS_TELEMETRY_TRUCK_CHANNEL_navigation_time = SDKString('truck.navigation.time');
 
 (**
  * @brief The value of truck's navigation speed limit (in m/s).
@@ -629,33 +716,33 @@ const
  *
  * Type: float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_navigation_speed_limit      = TelemetryString('truck.navigation.speed.limit');
+  SCS_TELEMETRY_TRUCK_CHANNEL_navigation_speed_limit = SDKString('truck.navigation.speed.limit');
 
 // Wheels.
 
 (**
  * @brief Vertical displacement of the wheel from its
- * neutral position in meters.
+ * axis in meters.
  *
  * Type: indexed float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_susp_deflection       = TelemetryString('truck.wheel.suspension.deflection');
+  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_susp_deflection = SDKString('truck.wheel.suspension.deflection');
 
 (**
  * @brief Is the wheel in contact with ground?
  *
  * Type: indexed bool
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_on_ground             = TelemetryString('truck.wheel.on_ground');
+  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_on_ground = SDKString('truck.wheel.on_ground');
 
 (**
- * @brief Substance bellow the whell.
+ * @brief Substance below the whell.
  *
  * Index of substance as delivered trough SUBSTANCE config.
  *
  * Type: indexed u32
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_substance             = TelemetryString('truck.wheel.substance');
+  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_substance = SDKString('truck.wheel.substance');
 
 (**
  * @brief Angular velocity of the wheel in rotations per
@@ -665,7 +752,7 @@ const
  *
  * Type: indexed float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_velocity              = TelemetryString('truck.wheel.angular_velocity');
+  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_velocity = SDKString('truck.wheel.angular_velocity');
 
 (**
  * @brief Steering rotation of the wheel in rotations.
@@ -678,7 +765,7 @@ const
  *
  * Type: indexed float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_steering              = TelemetryString('truck.wheel.steering');
+  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_steering = SDKString('truck.wheel.steering');
 
 (**
  * @brief Rolling rotation of the wheel in rotations.
@@ -688,7 +775,7 @@ const
  *
  * Type: indexed float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_rotation              = TelemetryString('truck.wheel.rotation');
+  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_rotation = SDKString('truck.wheel.rotation');
 
 (**
  * @brief Lift state of the wheel <0;1>
@@ -703,7 +790,7 @@ const
  *
  * Type: indexed float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_lift                  = TelemetryString('truck.wheel.lift');
+  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_lift = SDKString('truck.wheel.lift');
 
 (**
  * @brief Vertical displacement of the wheel axle
@@ -716,11 +803,11 @@ const
  *
  * Type: indexed float
  *)
-  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_lift_offset           = TelemetryString('truck.wheel.lift.offset');
-
+  SCS_TELEMETRY_TRUCK_CHANNEL_wheel_lift_offset = SDKString('truck.wheel.lift.offset');
+  
 (*</interface>*)
 
 implementation
 
-(*</unit>*) 
+(*</unit>*)
 end.

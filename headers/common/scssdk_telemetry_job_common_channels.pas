@@ -40,11 +40,11 @@
 ===============================================================================}
 (*<unit>*)
 (**
- * @file scssdk_eut2.h
+ * @file scssdk_telemetry_job_common_channels.h
  *
- * @brief ETS 2 specific constants.
+ * @brief Job telemetry specific constants for channels.
  *)
-unit scssdk_eut2;
+unit scssdk_telemetry_job_common_channels;
 
 {$INCLUDE '..\scssdk_defs.inc'}
 
@@ -56,10 +56,12 @@ uses
 (*<interface>*)
 
 (**
- * @brief Value used in the scs_sdk_init_params_t::game_id to identify this game.
+ * @brief The total damage of the cargo in range 0.0 to 1.0.
+ *
+ * Type: float
  *)
 const
-  SCS_GAME_ID_EUT2 = SDKString('eut2');
+  SCS_TELEMETRY_JOB_CHANNEL_cargo_damage = SDKString('job.cargo.damage');
   
 (*</interface>*)
 
